@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using HangmanRenderer.Renderer;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Hangman.Core.Game
 {
@@ -14,11 +16,15 @@ namespace Hangman.Core.Game
             _renderer = new GallowsRenderer();
         }
 
-        private string[] word_list = { "help", "community", "computer" };
+        private string[] word_list = { "help", "build", "computer" };
+
+        private Random rdm_num = new Random();
 
         private char[] correct_word;
 
-        private string my_word = String.Empty;
+        //private string my_word = String.Empty;
+
+        bool win_condition;
 
         private char nextGuess;
 
@@ -28,8 +34,6 @@ namespace Hangman.Core.Game
 
         private string get_word()
         {
-            Random rdm_num = new Random();
-            my_word = word_list[rdm_num.Next(word_list.Length)];
             return word_list[rdm_num.Next(word_list.Length)];
 
         }
@@ -70,53 +74,70 @@ namespace Hangman.Core.Game
             }
         }
 
+        private void is_win()
+        {
+            win_condition = true;
+            for (int i = 0; i < correct_word.Length; i++)
+            {
+                if ((user_guesses[i].Equals(correct_word[i])) == false)
+                {
+                    win_condition = false;
+                    break;
+                }
+            }
+        }
+
         public void Run()
         {
             _renderer.Render(5, 5, 6);
 
             correct_word = get_word().ToCharArray();
 
+            user_guesses.Clear();
             for (int i = 0; i < correct_word.Length; i++)
             {
                 user_guesses.Add(disp_blank());
             }
 
             Console.ForegroundColor = ConsoleColor.Blue;
-
             update_word_status();
 
             Console.ForegroundColor = ConsoleColor.Green;
-            get_guess();
 
             while (true)
             {
-                if (check_guess() == true)
+                get_guess();
+
+                if (check_guess())
                 {
                     update_word_status();
                     Console.SetCursorPosition(0, 17);
                     Console.WriteLine("Nice!");
-                    get_guess();
                 }
-                else if (check_guess() == false)
+                else
                 {
+                    wrong_guess--;
                     Console.SetCursorPosition(0, 17);
                     Console.WriteLine($"Oopsie! {wrong_guess} guesses remaining, try again...");
-                    
                     _renderer.Render(5, 5, wrong_guess);
-                    wrong_guess--;
-                    get_guess();
-
+                    
                     if (wrong_guess == 0)
                     {
                         _renderer.Render(5, 5, wrong_guess);
                         Console.SetCursorPosition(5, 19);
-                        Console.WriteLine($"You Died! \nThe Word is {my_word}");
+                        Console.WriteLine($"You Died! \nThe Word is {new string(correct_word)}");
                         break;
                     }
                 }
+
+                is_win();
+                if (win_condition)
+                {
+                    Console.SetCursorPosition(5, 19);
+                    Console.WriteLine("You WIN!");
+                    break;
+                }
             }
-
-
         }
 
     }
