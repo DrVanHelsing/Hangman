@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Numerics;
 using HangmanRenderer.Renderer;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -17,7 +18,7 @@ namespace Hangman.Core.Game
             _renderer = new GallowsRenderer();
         }
 
-        private string[] word_list = { "help", "build", "computer" };
+        private string[] word_list = { "help", "build", "computer", "current" };
 
         private char[] letters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
 
@@ -47,15 +48,19 @@ namespace Hangman.Core.Game
 
         private bool check_guess()
         {
-            for (int i = 0; i < correct_word.Length; i++)
+            if (correct_word.Contains(nextGuess))
             {
-                if (nextGuess == correct_word[i])
+                for (int i = 0; i < correct_word.Length; i++)
                 {
-                    user_guesses[i] = nextGuess;
-                    return true;
+                    if (nextGuess == correct_word[i])
+                    {
+                        user_guesses[i] = correct_word[i];
+                        continue;
+                    }   
                 }
+                return true;
             }
-            return false;
+            return false;    
         }
 
         private char disp_blank()
@@ -203,8 +208,8 @@ namespace Hangman.Core.Game
 
 /*
  *TO DO:
- *fix functionality bug: Allow for input of words with repeated letters
- *
+ *[NOTHING]
  *DONE:
  *display letter list of previously inputted letters --> remove used letters from list
+ *fix functionality bug: words with repeated letters --> repeated letters should update on the first input of the correct letter
 */ 
