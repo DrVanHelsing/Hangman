@@ -22,6 +22,8 @@ namespace Hangman.Core.Game
 
         private char[] letters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
 
+        private List<char> old_guesses = new List<char>();
+
         private Random rdm_num = new Random();
 
         private char[] correct_word;
@@ -42,8 +44,9 @@ namespace Hangman.Core.Game
         private void get_guess()
         {
             Console.SetCursorPosition(0, 15);
-            Console.Write("What is your next guess: ");
+            Console.Write("Pick an unused letter: ");
             nextGuess = Convert.ToChar(Console.ReadLine().ToLower());
+
         }
 
         private bool check_guess()
@@ -60,7 +63,7 @@ namespace Hangman.Core.Game
                 }
                 return true;
             }
-            return false;    
+            return false;
         }
 
         private char disp_blank()
@@ -208,7 +211,7 @@ namespace Hangman.Core.Game
 
 /*
  *TO DO:
- *[NOTHING]
+ *Prompt the user to re-enter a letter - when a letter that has already been inputted is entered (without using a life)
  *DONE:
  *display letter list of previously inputted letters --> remove used letters from list
  *fix functionality bug: words with repeated letters --> repeated letters should update on the first input of the correct letter
