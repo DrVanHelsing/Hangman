@@ -18,11 +18,10 @@ namespace Hangman.Core.Game
             _renderer = new GallowsRenderer();
         }
 
-        private string[] word_list = { "help", "build", "computer", "current" };
+        private string[] word_list = { "help", "build", "computer", "current", "spectacles", "water", "chocolate", "cellphone", "physical", "table", 
+                                       "different", "cables", "jacket", "television", "screen", "keyboard", "intelligent", "thermal", "dynamic", "alphabet" };
 
         private char[] letters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
-
-        private List<char> old_guesses = new List<char>();
 
         private Random rdm_num = new Random();
 
@@ -46,7 +45,6 @@ namespace Hangman.Core.Game
             Console.SetCursorPosition(0, 15);
             Console.Write("Pick an unused letter: ");
             nextGuess = Convert.ToChar(Console.ReadLine().ToLower());
-
         }
 
         private bool check_guess()
