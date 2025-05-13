@@ -22,15 +22,13 @@ namespace Hangman.Core.Game
 
         private char[] correct_word;
 
-        //private string my_word = String.Empty;
-
         bool win_condition;
 
         private char nextGuess;
 
         private List<char> user_guesses = new List<char>();
 
-        private int wrong_guess = 5;
+        private int wrong_guess = 6;
 
         private string get_word()
         {
@@ -117,7 +115,7 @@ namespace Hangman.Core.Game
                 else
                 {
                     wrong_guess--;
-                    Console.SetCursorPosition(0, 17);
+                    Console.SetCursorPosition(0, 18);
                     Console.WriteLine($"Oopsie! {wrong_guess} guesses remaining, try again...");
                     _renderer.Render(5, 5, wrong_guess);
                     
@@ -133,7 +131,7 @@ namespace Hangman.Core.Game
                 is_win();
                 if (win_condition)
                 {
-                    Console.SetCursorPosition(5, 19);
+                    Console.SetCursorPosition(9, 19);
                     Console.WriteLine("You WIN!");
                     break;
                 }
