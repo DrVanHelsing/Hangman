@@ -18,44 +18,44 @@ namespace Hangman.Core.Game
             _renderer = new GallowsRenderer();
         }
 
-        private string[] word_list = { "help", "build", "computer", "current", "spectacles", "water", "chocolate", "cellphone", "physical", "table", 
+        private string[] wordBank = { "help", "build", "computer", "current", "spectacles", "water", "chocolate", "cellphone", "physical", "table", 
                                        "different", "cables", "jacket", "television", "screen", "keyboard", "intelligent", "thermal", "dynamic", "alphabet" };
 
-        private char[] letters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+        private char[] availableLetters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
 
-        private Random rdm_num = new Random();
+        private Random randomizer = new Random();
 
-        private char[] correct_word;
+        private char[] correctWord;
 
-        bool win_condition;
+        bool winCondition;
 
         private char nextGuess;
 
-        private List<char> user_guesses = new List<char>();
+        private List<char> userGuesses = new List<char>();
 
-        private int num_lives = 6;
+        private int numLives = 6;
 
-        private string get_word()
+        private string GetWord()
         {
-            return word_list[rdm_num.Next(word_list.Length)];
+            return wordBank[randomizer.Next(wordBank.Length)];
         }
 
-        private void get_guess()
+        private void getGuess()
         {
             Console.SetCursorPosition(0, 15);
             Console.Write("Pick an unused letter: ");
             nextGuess = Convert.ToChar(Console.ReadLine().ToLower());
         }
 
-        private bool check_guess()
+        private bool checkGuess()
         {
-            if (correct_word.Contains(nextGuess))
+            if (correctWord.Contains(nextGuess))
             {
-                for (int i = 0; i < correct_word.Length; i++)
+                for (int i = 0; i < correctWord.Length; i++)
                 {
-                    if (nextGuess == correct_word[i])
+                    if (nextGuess == correctWord[i])
                     {
-                        user_guesses[i] = correct_word[i];
+                        userGuesses[i] = correctWord[i];
                         continue;
                     }   
                 }
@@ -64,50 +64,50 @@ namespace Hangman.Core.Game
             return false;
         }
 
-        private char disp_blank()
+        private char dispBlank()
         {
             return '_';
         }
 
-        private void update_word_status()
+        private void UpdateWordStatus()
         {
-            for (int j = 0; j < correct_word.Length; j++)
+            for (int j = 0; j < correctWord.Length; j++)
             {
                 Console.SetCursorPosition(0, 13);
                 Console.Write("Your current guess: ");
-                Console.Write(string.Join(" ", user_guesses));
+                Console.Write(string.Join(" ", userGuesses));
             }
         }
 
-        private void is_win()
+        private void IsWin()
         {
-            win_condition = true;
-            for (int i = 0; i < correct_word.Length; i++)
+            winCondition = true;
+            for (int i = 0; i < correctWord.Length; i++)
             {
-                if ((user_guesses[i].Equals(correct_word[i])) == false)
+                if ((userGuesses[i].Equals(correctWord[i])) == false)
                 {
-                    win_condition = false;
+                    winCondition = false;
                     break;
                 }
             }
         }
 
-        private string x_box(int x, int y)
+        private string Xbox(int x, int y)
         {
             Console.SetCursorPosition(x, y);
             return "----------------------------------";
         }
 
-        private string y_box(int x, int y)
+        private string Ybox(int x, int y)
         {
             Console.SetCursorPosition(x, y);
             return "|";
         }
 
-        private void update_letter_list() 
+        private void UpdateLetterList() 
         {
-            Console.Write(x_box(50,5));
-            Console.Write(x_box(50, 17));
+            Console.Write(Xbox(50,5));
+            Console.Write(Xbox(50, 17));
 
             Console.SetCursorPosition(60,7);
             Console.Write("Unused Letters:");
@@ -116,32 +116,32 @@ namespace Hangman.Core.Game
             for (int letter_num = 0; letter_num < 10; letter_num++)
             {
                 
-                Console.Write(letters[letter_num] +"  ");
+                Console.Write(availableLetters[letter_num] +"  ");
             }
             Console.SetCursorPosition(53, 12);
             for (int letter_num = 10; letter_num < 20; letter_num++)
             {
 
-                Console.Write(letters[letter_num] + "  ");
+                Console.Write(availableLetters[letter_num] + "  ");
             }
             Console.SetCursorPosition(53, 15);
             for (int letter_num = 20; letter_num < 26; letter_num++)
             {
 
-                Console.Write(letters[letter_num] + "  ");
+                Console.Write(availableLetters[letter_num] + "  ");
             }
 
             for (int i = 0; i < 13; i++)
             {
-                Console.Write(y_box(51, i +5));
-                Console.Write(y_box(82, i + 5));
+                Console.Write(Ybox(51, i +5));
+                Console.Write(Ybox(82, i + 5));
             }
 
-            for (int alphabet = 0; alphabet < letters.Length; alphabet++)
+            for (int alphabet = 0; alphabet < availableLetters.Length; alphabet++)
             {
-                if (letters[alphabet] == nextGuess)
+                if (availableLetters[alphabet] == nextGuess)
                 {
-                    letters[alphabet] = ' '; 
+                    availableLetters[alphabet] = ' '; 
                 }
             }
         }
@@ -150,52 +150,51 @@ namespace Hangman.Core.Game
         {
             _renderer.Render(5, 5, 6);
 
-            correct_word = get_word().ToCharArray();
+            correctWord = GetWord().ToCharArray();
 
-            update_letter_list();
+            UpdateLetterList();
             
 
-            user_guesses.Clear();
-            for (int i = 0; i < correct_word.Length; i++)
+            userGuesses.Clear();
+            for (int i = 0; i < correctWord.Length; i++)
             {
-                user_guesses.Add(disp_blank());
+                userGuesses.Add(dispBlank());
             }
 
             Console.ForegroundColor = ConsoleColor.Blue;
-            update_word_status();
+            UpdateWordStatus();
 
             Console.ForegroundColor = ConsoleColor.Green;
 
             while (true)
             {
-                update_letter_list();
-                get_guess();
-                update_letter_list();
+                UpdateLetterList();
+                getGuess();
+                UpdateLetterList();
 
-                if (check_guess())
+                if (checkGuess())
                 {
-                    update_word_status();
+                    UpdateWordStatus();
                     Console.SetCursorPosition(0, 17);
                     Console.WriteLine("Nice! \n");
                 }
                 else
                 {
-                    num_lives--;
+                    numLives--;
                     Console.SetCursorPosition(0, 18);
-                    Console.WriteLine($"Oopsie! {num_lives} guesses remaining, try again...");
-                    _renderer.Render(5, 5, num_lives);
+                    Console.WriteLine($"Oopsie! {numLives} guesses remaining, try again...");
+                    _renderer.Render(5, 5, numLives);
                     
-                    if (num_lives == 0)
+                    if (numLives == 0)
                     {
-                        _renderer.Render(5, 5, num_lives);
+                        _renderer.Render(5, 5, numLives);
                         Console.SetCursorPosition(5, 19);
-                        Console.WriteLine($"You Died! \nThe Word is {new string(correct_word)}");
+                        Console.WriteLine($"You Died! \nThe Word is {new string(correctWord)}");
                         break;
                     }
                 }
-
-                is_win();
-                if (win_condition)
+                IsWin();
+                if (winCondition)
                 {
                     Console.SetCursorPosition(9, 19);
                     Console.WriteLine("You WIN!");
@@ -203,14 +202,5 @@ namespace Hangman.Core.Game
                 }
             }
         }
-
     }
 }
-
-/*
- *TO DO:
- *Prompt the user to re-enter a letter - when a letter that has already been inputted is entered (without using a life)
- *DONE:
- *display letter list of previously inputted letters --> remove used letters from list
- *fix functionality bug: words with repeated letters --> repeated letters should update on the first input of the correct letter
-*/ 
