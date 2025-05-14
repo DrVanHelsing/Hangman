@@ -40,14 +40,14 @@ namespace Hangman.Core.Game
             return wordBank[randomizer.Next(wordBank.Length)];
         }
 
-        private void getGuess()
+        private void GetGuess()
         {
             Console.SetCursorPosition(0, 15);
             Console.Write("Pick an unused letter: ");
             nextGuess = Convert.ToChar(Console.ReadLine().ToLower());
         }
 
-        private bool checkGuess()
+        private bool CheckGuess()
         {
             if (correctWord.Contains(nextGuess))
             {
@@ -64,7 +64,7 @@ namespace Hangman.Core.Game
             return false;
         }
 
-        private char dispBlank()
+        private static char DispBlank()
         {
             return '_';
         }
@@ -92,13 +92,13 @@ namespace Hangman.Core.Game
             }
         }
 
-        private string Xbox(int x, int y)
+        private static string Xbox(int x, int y)
         {
             Console.SetCursorPosition(x, y);
             return "----------------------------------";
         }
 
-        private string Ybox(int x, int y)
+        private static string Ybox(int x, int y)
         {
             Console.SetCursorPosition(x, y);
             return "|";
@@ -158,7 +158,7 @@ namespace Hangman.Core.Game
             userGuesses.Clear();
             for (int i = 0; i < correctWord.Length; i++)
             {
-                userGuesses.Add(dispBlank());
+                userGuesses.Add(DispBlank());
             }
 
             Console.ForegroundColor = ConsoleColor.Blue;
@@ -169,10 +169,10 @@ namespace Hangman.Core.Game
             while (true)
             {
                 UpdateLetterList();
-                getGuess();
+                GetGuess();
                 UpdateLetterList();
 
-                if (checkGuess())
+                if (CheckGuess())
                 {
                     UpdateWordStatus();
                     Console.SetCursorPosition(0, 17);
